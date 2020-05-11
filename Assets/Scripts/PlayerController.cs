@@ -4,7 +4,8 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed = 5.0f;
+    public float speed;
+    public VariableJoystick variableJoystick;
     public Text countText;
     public Text winText;
 
@@ -17,9 +18,11 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        variableJoystick.SetMode(JoystickType.Dynamic);
         count = 0;
         SetCountText();
         winText.text = "";
+
     }
 
     void Update()
@@ -50,8 +53,9 @@ public class PlayerController : MonoBehaviour
         if (touchStart)
         {
             Vector3 offset = pointB - pointA;
-            Vector3 direction = Vector3.ClampMagnitude(offset, 1.0f);
-            rb.AddForce(direction * speed * Time.deltaTime);
+            //Vector3 direction = Vector3.ClampMagnitude(offset, 1.0f);
+            Vector3 direction = Vector3.forward * variableJoystick.Vertical + Vector3.right * variableJoystick.Horizontal;
+            rb.AddForce(direction * speed * Time.fixedDeltaTime, ForceMode.VelocityChange);
         }
     }
 
